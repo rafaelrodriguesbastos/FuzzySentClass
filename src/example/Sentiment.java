@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 import generic.Input;
 import generic.Output;
@@ -33,6 +34,9 @@ public class Sentiment {
 	Input negativity, positivity; // the inputs to the FLS
 	Output classification; // the output of the FLS
 	IT2_Rulebase rulebase; // the rulebase captures the entire FLS
+	
+	private Double OutputXValue;
+    private Double OutputYValue;
 
 	public Sentiment() throws IOException {
 
@@ -130,15 +134,15 @@ public class Sentiment {
 				new IT2_Rule(new IT2_Antecedent[] { moderateNegativity, moderatePositivity }, neutralClassification));
 		rulebase.addRule(new IT2_Rule(new IT2_Antecedent[] { highNegativity, highPositivity }, neutralClassification));
 		rulebase.addRule(
-				new IT2_Rule(new IT2_Antecedent[] { lowNegativity, moderatePositivity }, negativeClassification));
-		rulebase.addRule(new IT2_Rule(new IT2_Antecedent[] { lowNegativity, highPositivity }, negativeClassification));
+				new IT2_Rule(new IT2_Antecedent[] { moderateNegativity, lowPositivity }, negativeClassification));
+		rulebase.addRule(new IT2_Rule(new IT2_Antecedent[] { highNegativity, lowPositivity }, negativeClassification));
 		rulebase.addRule(
-				new IT2_Rule(new IT2_Antecedent[] { moderateNegativity, highPositivity }, negativeClassification));
+				new IT2_Rule(new IT2_Antecedent[] { highNegativity, moderatePositivity }, negativeClassification));
 		rulebase.addRule(
-				new IT2_Rule(new IT2_Antecedent[] { moderateNegativity, lowPositivity }, positiveClassification));
+				new IT2_Rule(new IT2_Antecedent[] { lowNegativity, moderatePositivity }, positiveClassification));
 		rulebase.addRule(
-				new IT2_Rule(new IT2_Antecedent[] { highNegativity, moderatePositivity }, positiveClassification));
-		rulebase.addRule(new IT2_Rule(new IT2_Antecedent[] { highNegativity, lowPositivity }, positiveClassification));
+				new IT2_Rule(new IT2_Antecedent[] { moderateNegativity, highPositivity }, positiveClassification));
+		rulebase.addRule(new IT2_Rule(new IT2_Antecedent[] { lowNegativity, highPositivity }, positiveClassification));
 
 		System.out.println("Rulebases setted...");
 		
@@ -164,7 +168,7 @@ public class Sentiment {
 	    
 
 		StringBuffer outputFLS = new StringBuffer();
-		outputFLS.append("sequencial; classification; tweetID; positivity; negativity; puntual; lowerLowPositivityMF; upperLowPositivityMF; lowerModeratePositivityMF; upperModeratePositivityMF; lowerHighPositivityMF; upperHighPositivityMF; lowerLowNegativityMF; upperLowNegativityMF; lowerModerateNegativityMF; upperModerateNegativityMF; lowerHighNegativityMF; upperHighNegativityMF; lowerNegativeClassificationMF; upperNegativeClassificationMF; neutralClassificationMF; lowerPositiveClassificationMF; upperPositiveClassificationMF").append("\n");
+		outputFLS.append("sequencial; classification; tweetID; positivity; negativity; puntual; Xinf; Xsup; lowerLowPositivityMF; upperLowPositivityMF; lowerModeratePositivityMF; upperModeratePositivityMF; lowerHighPositivityMF; upperHighPositivityMF; lowerLowNegativityMF; upperLowNegativityMF; lowerModerateNegativityMF; upperModerateNegativityMF; lowerHighNegativityMF; upperHighNegativityMF; lowerNegativeClassificationMF; upperNegativeClassificationMF; neutralClassificationMF; lowerPositiveClassificationMF; upperPositiveClassificationMF").append("\n");
 		outputFLSFile.write(outputFLS.toString().getBytes());
 		
 		int x = 0;
@@ -184,6 +188,7 @@ public class Sentiment {
 			.append(data[1]).append("; ")
 			.append(Double.valueOf(data[4])).append("; ")
 			.append(Double.valueOf(data[5])).append("; ").append(point).append("; ")
+			.append(this.OutputXValue).append("; ").append(this.OutputYValue).append("; ")
 			.append(lowPositivityT2MF.getLowerBound(Double.valueOf(data[4]))).append("; ")
 			.append(lowPositivityT2MF.getUpperBound(Double.valueOf(data[4]))).append("; ")
 			.append(moderatePositivityT2MF.getLowerBound(Double.valueOf(data[4]))).append("; ")
@@ -200,7 +205,7 @@ public class Sentiment {
 			.append(negativeClassificationT2MF.getUpperBound(point)).append("; ")
 			.append(neutralClassificationT2MF.getLowerBound(point)).append("; ")
 			.append(neutralClassificationT2MF.getUpperBound(point)).append("; ")
-			.append(positiveClassificationT2MF.getLowerBound(point)).append("\n")
+			.append(positiveClassificationT2MF.getLowerBound(point)).append("; ")
 			.append(positiveClassificationT2MF.getUpperBound(point)).append("\n");
 					
 			outputFLSFile.write(outputFLS.toString().getBytes());
@@ -250,9 +255,18 @@ public class Sentiment {
 //		System.out.println("Using height defuzzification " + rulebase.evaluate(0).get(classification));
 //		System.out.println("Using centroid defuzzification " + rulebase.evaluate(1).get(classification));
 
-		return rulebase.evaluate(1).get(classification);
+		//this.OutputXValue = rulebase.evaluateGetCentroid(0)
 
-
+		TreeMap<Output, Object[]> centroid = rulebase.evaluateGetCentroid(1);
+    	Object[] centroidTip = centroid.get(classification);
+        Tuple centroidTipXValues = (Tuple)centroidTip[0];
+				
+        this.OutputXValue = centroidTipXValues.getLeft();
+        this.OutputYValue = centroidTipXValues.getRight();
+                
+		//return rulebase.evaluate(1).get(classification);
+		return centroidTipXValues.getAverage();
+		
 	}
 
 	private void plotMFs(String name, IntervalT2MF_Interface[] sets, Tuple xAxisRange, int discretizationLevel) {
