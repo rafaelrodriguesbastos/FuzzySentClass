@@ -34,6 +34,9 @@ public class Sentiment {
 	Input negativity, positivity; // the inputs to the FLS
 	Output classification; // the output of the FLS
 	IT2_Rulebase rulebase; // the rulebase captures the entire FLS
+	String linguisticClassification;
+	int accuracy;
+	int accuracyCount = 0;
 	
 	private Double OutputXValue;
     private Double OutputYValue;
@@ -180,7 +183,7 @@ public class Sentiment {
 	    
 
 		StringBuffer outputFLS = new StringBuffer();
-		outputFLS.append("sequencial; classification; tweetID; positivity; negativity; puntual; Xinf; Xsup; lowerLowPositivityMF; upperLowPositivityMF; lowerModeratePositivityMF; upperModeratePositivityMF; lowerHighPositivityMF; upperHighPositivityMF; lowerLowNegativityMF; upperLowNegativityMF; lowerModerateNegativityMF; upperModerateNegativityMF; lowerHighNegativityMF; upperHighNegativityMF; lowerNegativeClassificationMF; upperNegativeClassificationMF; neutralClassificationMF; lowerPositiveClassificationMF; upperPositiveClassificationMF").append("\n");
+		outputFLS.append("sequencial; classification; tweetID; positivity; negativity; puntual; Xinf; Xsup; lowerLowPositivityMF; upperLowPositivityMF; lowerModeratePositivityMF; upperModeratePositivityMF; lowerHighPositivityMF; upperHighPositivityMF; lowerLowNegativityMF; upperLowNegativityMF; lowerModerateNegativityMF; upperModerateNegativityMF; lowerHighNegativityMF; upperHighNegativityMF; lowerNegativeClassificationMF; upperNegativeClassificationMF; neutralClassificationMF; lowerPositiveClassificationMF; upperPositiveClassificationMF; linguisticClassification; accuracy").append("\n");
 		outputFLSFile.write(outputFLS.toString().getBytes());
 		
 		int x = 0;
@@ -193,7 +196,58 @@ public class Sentiment {
 			Double point = getClassification(Double.valueOf(data[4]), Double.valueOf(data[5]));
 			
 			outputFLS = new StringBuffer();
-			//output with tweet
+			
+			
+			//Get the lower and upper bound of MF for each input variable
+			//positivity
+			double lowerLowPositivity = lowPositivityT2MF.getLowerBound(Double.valueOf(data[4]));
+			double upperLowPositivity = lowPositivityT2MF.getUpperBound(Double.valueOf(data[4]));
+			double lowerModeratePositivity = moderatePositivityT2MF.getLowerBound(Double.valueOf(data[4]));
+			double upperModeratePositivity = moderatePositivityT2MF.getUpperBound(Double.valueOf(data[4]));
+			double lowerHighPositivity = highPositivityT2MF.getLowerBound(Double.valueOf(data[4]));
+			double upperHighPositivity = highPositivityT2MF.getUpperBound(Double.valueOf(data[4]));
+			//negativity
+			double lowerLowNegativity = lowNegativityT2MF.getLowerBound(Double.valueOf(data[5]));
+			double upperLowNegativity = lowNegativityT2MF.getUpperBound(Double.valueOf(data[5]));
+			double lowerModerateNegativity = moderateNegativityT2MF.getLowerBound(Double.valueOf(data[5]));
+			double upperModerateNegativity = moderateNegativityT2MF.getUpperBound(Double.valueOf(data[5]));
+			double lowerHighNegativity = highNegativityT2MF.getLowerBound(Double.valueOf(data[5]));
+			double upperHighNegativity = highNegativityT2MF.getUpperBound(Double.valueOf(data[5]));
+			
+			//Get the lower and upper bound of MF for punctual output
+			double lowerNegativeClassification = negativeClassificationT2MF.getLowerBound(point);
+			double upperNegativeClassification = negativeClassificationT2MF.getUpperBound(point);
+			double lowerNeutralClassification = neutralClassificationT2MF.getLowerBound(point);
+			double upperNeutralClassification = neutralClassificationT2MF.getUpperBound(point);
+			double lowerPositiveClassification = positiveClassificationT2MF.getLowerBound(point);
+			double upperPositiveClassification = positiveClassificationT2MF.getUpperBound(point);
+
+			double avgNegativeClassification = (upperNegativeClassification + lowerNegativeClassification)/2;
+			double avgNeutralClassification = (upperNeutralClassification + lowerNeutralClassification)/2;
+			double avgPositiveClassification = (upperPositiveClassification + lowerPositiveClassification)/2;
+			
+			if (avgNegativeClassification > avgNeutralClassification && avgNegativeClassification > avgPositiveClassification) {
+				linguisticClassification = "negative";
+			}
+			else if (avgNeutralClassification > avgNegativeClassification && avgNeutralClassification > avgPositiveClassification) {
+				linguisticClassification = "neutral";
+			}
+			else if (avgPositiveClassification > avgNegativeClassification && avgPositiveClassification > avgNeutralClassification) {
+				linguisticClassification = "positive";
+			}
+			else if (avgPositiveClassification == avgNegativeClassification && avgPositiveClassification == avgNeutralClassification) {
+				linguisticClassification = "neutral";
+			}
+			
+			if (linguisticClassification.equals(data[3].toString())) {
+				accuracy = 1;
+				accuracyCount++;
+			}
+			else {
+				accuracy = 0;
+			}
+			
+			//Write the FLS output of sentiment analysis 
 			outputFLS
 			.append(x).append("; ")
 			.append(data[3]).append("; ")
@@ -201,24 +255,26 @@ public class Sentiment {
 			.append(Double.valueOf(data[4])).append("; ")
 			.append(Double.valueOf(data[5])).append("; ").append(point).append("; ")
 			.append(this.OutputXValue).append("; ").append(this.OutputYValue).append("; ")
-			.append(lowPositivityT2MF.getLowerBound(Double.valueOf(data[4]))).append("; ")
-			.append(lowPositivityT2MF.getUpperBound(Double.valueOf(data[4]))).append("; ")
-			.append(moderatePositivityT2MF.getLowerBound(Double.valueOf(data[4]))).append("; ")
-			.append(moderatePositivityT2MF.getUpperBound(Double.valueOf(data[4]))).append("; ")
-			.append(highPositivityT2MF.getLowerBound(Double.valueOf(data[4]))).append("; ")
-			.append(highPositivityT2MF.getUpperBound(Double.valueOf(data[4]))).append("; ")
-			.append(lowNegativityT2MF.getLowerBound(Double.valueOf(data[5]))).append("; ")
-			.append(lowNegativityT2MF.getUpperBound(Double.valueOf(data[5]))).append("; ")
-			.append(moderateNegativityT2MF.getLowerBound(Double.valueOf(data[5]))).append("; ")
-			.append(moderateNegativityT2MF.getUpperBound(Double.valueOf(data[5]))).append("; ")
-			.append(highNegativityT2MF.getLowerBound(Double.valueOf(data[5]))).append("; ")
-			.append(highNegativityT2MF.getUpperBound(Double.valueOf(data[5]))).append("; ")
-			.append(negativeClassificationT2MF.getLowerBound(point)).append("; ")
-			.append(negativeClassificationT2MF.getUpperBound(point)).append("; ")
-			.append(neutralClassificationT2MF.getLowerBound(point)).append("; ")
-			.append(neutralClassificationT2MF.getUpperBound(point)).append("; ")
-			.append(positiveClassificationT2MF.getLowerBound(point)).append("; ")
-			.append(positiveClassificationT2MF.getUpperBound(point)).append("\n");
+			.append(lowerLowPositivity).append("; ")
+			.append(upperLowPositivity).append("; ")
+			.append(lowerModeratePositivity).append("; ")
+			.append(upperModeratePositivity).append("; ")
+			.append(lowerHighPositivity).append("; ")
+			.append(upperHighPositivity).append("; ")
+			.append(lowerLowNegativity).append("; ")
+			.append(upperLowNegativity).append("; ")
+			.append(lowerModerateNegativity).append("; ")
+			.append(upperModerateNegativity).append("; ")
+			.append(lowerHighNegativity).append("; ")
+			.append(upperHighNegativity).append("; ")
+			.append(lowerNegativeClassification).append("; ")
+			.append(upperNegativeClassification).append("; ")
+			.append(lowerNeutralClassification).append("; ")
+			.append(upperNeutralClassification).append("; ")
+			.append(lowerPositiveClassification).append("; ")
+			.append(upperPositiveClassification).append("; ")
+			.append(linguisticClassification).append("; ")
+			.append(accuracy).append("\n");
 					
 			outputFLSFile.write(outputFLS.toString().getBytes());
 
@@ -227,6 +283,9 @@ public class Sentiment {
 		lineScan.close();
 
 		System.out.println("Output file generated!");
+		
+		System.out.println(accuracyCount + " accuracy!");
+		
 		
 		// plot some sets, discretizing each input into 100 steps.
 		plotMFs("Negativity Membership Functions",
@@ -257,7 +316,7 @@ public class Sentiment {
 	 * @throws IOException
 	 */
 
-	private Double getClassification(double negativityMeasure, double positivityMeasure) {
+	private Double getClassification(double positivityMeasure, double negativityMeasure) {
 		// first, set the inputs
 		negativity.setInput(negativityMeasure);
 		positivity.setInput(positivityMeasure);
