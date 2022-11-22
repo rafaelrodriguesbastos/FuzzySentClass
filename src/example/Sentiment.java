@@ -49,65 +49,77 @@ public class Sentiment {
 
 		// Set up the membership functions (MFs) for each input and output
 		// Negativity input
-		double lowerLowNegLimits[] = { 0.0, 0.0, 0.3, 0.4333333333333333 };
-		double upperLowNegLimits[] = { 0.0, 0.0, 0.3, 0.5 };
-		double lowerModerateNegLimits[] = { 0.3666666666666666, 0.45, 0.55, 0.6333333333333333 };
-		double upperModerateNegLimits[] = { 0.3, 0.45, 0.55, 0.7 };
-		double lowerHighNegLimits[] = { 0.5666666666666666, 0.7, 1.0, 1.0 };
-		double upperHighNegLimits[] = { 0.5, 0.7, 1.0, 1.0 };
+//MF1='baixa':'itrapatype2',[-0.227 -0.09 0.28 0.45 -0.133 -0.00188 0.3 0.55 0.9]		
+		double lowerLowNegLimits[] = { -0.133, -0.00188, 0.28, 0.45 };
+		double upperLowNegLimits[] = { -0.227, -0.09, 0.3, 0.55 };
+		double lowerModerateNegLimits[] = { 0.33, 0.46, 0.54, 0.65 };
+		double upperModerateNegLimits[] = { 0.25, 0.38, 0.63, 0.75 };
+		double lowerHighNegLimits[] = { 0.55, 0.72, 1.019, 1.234 };
+		double upperHighNegLimits[] = { 0.45, 0.7, 1.119, 1.334 };
+		
+		double lowerLevels[] = {0.9, 0.9};
+		double upperLevels[] = {1.0, 1.0};
 
-		T1MF_Trapezoidal lowerLowNegativityMF = new T1MF_Trapezoidal("MF for lower low negativity", lowerLowNegLimits);
-		T1MF_Trapezoidal upperLowNegativityMF = new T1MF_Trapezoidal("MF for upper low negativity", upperLowNegLimits);
+		T1MF_Trapezoidal lowerLowNegativityMF = new T1MF_Trapezoidal("MF for lower low negativity", lowerLowNegLimits, lowerLevels);
+		T1MF_Trapezoidal upperLowNegativityMF = new T1MF_Trapezoidal("MF for upper low negativity", upperLowNegLimits, upperLevels);
 		IntervalT2MF_Trapezoidal lowNegativityT2MF = new IntervalT2MF_Trapezoidal("T2 MF for low negativity", upperLowNegativityMF, lowerLowNegativityMF);
 
-		T1MF_Trapezoidal lowerModerateNegativityMF = new T1MF_Trapezoidal("MF for lower moderate negativity", lowerModerateNegLimits);
-		T1MF_Trapezoidal upperModerateNegativityMF = new T1MF_Trapezoidal("MF for upper moderate negativity", upperModerateNegLimits);
+		T1MF_Trapezoidal lowerModerateNegativityMF = new T1MF_Trapezoidal("MF for lower moderate negativity", lowerModerateNegLimits, lowerLevels);
+		T1MF_Trapezoidal upperModerateNegativityMF = new T1MF_Trapezoidal("MF for upper moderate negativity", upperModerateNegLimits, upperLevels);
 		IntervalT2MF_Trapezoidal moderateNegativityT2MF = new IntervalT2MF_Trapezoidal("T2 MF for moderate negativity", upperModerateNegativityMF, lowerModerateNegativityMF);
 		
-		T1MF_Trapezoidal lowerHighNegativityMF = new T1MF_Trapezoidal("MF for lower high negativity", lowerHighNegLimits);
-		T1MF_Trapezoidal upperHighNegativityMF = new T1MF_Trapezoidal("MF for upper high negativity", upperHighNegLimits);
+		T1MF_Trapezoidal lowerHighNegativityMF = new T1MF_Trapezoidal("MF for lower high negativity", lowerHighNegLimits, lowerLevels);
+		T1MF_Trapezoidal upperHighNegativityMF = new T1MF_Trapezoidal("MF for upper high negativity", upperHighNegLimits, upperLevels);
 		IntervalT2MF_Trapezoidal highNegativityT2MF = new IntervalT2MF_Trapezoidal("T2 MF for high negativity", upperHighNegativityMF, lowerHighNegativityMF);
 
 
 		// Positivity input
-		double lowerLowPosLimits[] = { 0.0, 0.0, 0.3, 0.4333333333333333 };
-		double upperLowPosLimits[] = { 0.0, 0.0, 0.3, 0.5 };
-		double lowerModeratePosLimits[] = { 0.3666666666666666, 0.45, 0.55, 0.6333333333333333 };
-		double upperModeratePosLimits[] = { 0.3, 0.45, 0.55, 0.7 };
-		double lowerHighPosLimits[] = { 0.5666666666666666, 0.7, 1.0, 1.0 };
-		double upperHighPosLimits[] = { 0.5, 0.7, 1.0, 1.0 };
+		double lowerLowPosLimits[] = { -0.133, -0.00188, 0.28, 0.45 };
+		double upperLowPosLimits[] = { -0.227, -0.09, 0.3, 0.55 };
+		double lowerModeratePosLimits[] = { 0.33, 0.46, 0.54, 0.65 };
+		double upperModeratePosLimits[] = { 0.25, 0.38, 0.63, 0.75 };
+		double lowerHighPosLimits[] = { 0.55, 0.72, 1.019, 1.234 };
+		double upperHighPosLimits[] = { 0.45, 0.7, 1.119, 1.334 };
 
-		T1MF_Trapezoidal lowerLowPositivityMF = new T1MF_Trapezoidal("MF for lower low positivity", lowerLowPosLimits);
-		T1MF_Trapezoidal upperLowPositivityMF = new T1MF_Trapezoidal("MF for upper low positivity", upperLowPosLimits);
+		T1MF_Trapezoidal lowerLowPositivityMF = new T1MF_Trapezoidal("MF for lower low positivity", lowerLowPosLimits, lowerLevels);
+		T1MF_Trapezoidal upperLowPositivityMF = new T1MF_Trapezoidal("MF for upper low positivity", upperLowPosLimits, upperLevels);
 		IntervalT2MF_Trapezoidal lowPositivityT2MF = new IntervalT2MF_Trapezoidal("T2 MF for low positivity", upperLowPositivityMF, lowerLowPositivityMF);
 
-		T1MF_Trapezoidal lowerModeratePositivityMF = new T1MF_Trapezoidal("MF for lower moderate positivity", lowerModeratePosLimits);
-		T1MF_Trapezoidal upperModeratePositivityMF = new T1MF_Trapezoidal("MF for upper moderate positivity", upperModeratePosLimits);
+		T1MF_Trapezoidal lowerModeratePositivityMF = new T1MF_Trapezoidal("MF for lower moderate positivity", lowerModeratePosLimits, lowerLevels);
+		T1MF_Trapezoidal upperModeratePositivityMF = new T1MF_Trapezoidal("MF for upper moderate positivity", upperModeratePosLimits, upperLevels);
 		IntervalT2MF_Trapezoidal moderatePositivityT2MF = new IntervalT2MF_Trapezoidal("T2 MF for moderate positivity", upperModeratePositivityMF, lowerModeratePositivityMF);
 		
-		T1MF_Trapezoidal lowerHighPositivityMF = new T1MF_Trapezoidal("MF for lower high positivity", lowerHighPosLimits);
-		T1MF_Trapezoidal upperHighPositivityMF = new T1MF_Trapezoidal("MF for upper high positivity", upperHighPosLimits);
+		T1MF_Trapezoidal lowerHighPositivityMF = new T1MF_Trapezoidal("MF for lower high positivity", lowerHighPosLimits, lowerLevels);
+		T1MF_Trapezoidal upperHighPositivityMF = new T1MF_Trapezoidal("MF for upper high positivity", upperHighPosLimits, upperLevels);
 		IntervalT2MF_Trapezoidal highPositivityT2MF = new IntervalT2MF_Trapezoidal("T2 MF for high positivity", upperHighPositivityMF, lowerHighPositivityMF);
 
 		
 		// Classification output
-		double lowerNegativeLimits[] = { 0.0, 0.0, 0.3, 0.4333333333333333 };
-		double upperNegativeLimits[] = { 0.0, 0.0, 0.3, 0.5 };
-		double lowerNeutralLimits[] = { 0.3666666666666666, 0.45, 0.55, 0.6333333333333333 };
-		double upperNeutralLimits[] = { 0.3, 0.45, 0.55, 0.7 };
-		double lowerPositiveLimits[] = { 0.5666666666666666, 0.7, 1.0, 1.0 };
-		double upperPositiveLimits[] = { 0.5, 0.7, 1.0, 1.0 };
+//		double lowerNegativeLimits[] = { 0.0, 0.0, 0.3, 0.4333333333333333 };
+//		double upperNegativeLimits[] = { 0.0, 0.0, 0.3, 0.5 };
+//		double lowerNeutralLimits[] = { 0.3666666666666666, 0.45, 0.55, 0.6333333333333333 };
+//		double upperNeutralLimits[] = { 0.3, 0.45, 0.55, 0.7 };
+//		double lowerPositiveLimits[] = { 0.5666666666666666, 0.7, 1.0, 1.0 };
+//		double upperPositiveLimits[] = { 0.5, 0.7, 1.0, 1.0 };
+		
+		double lowerNegativeLimits[] = { -0.133, -0.00188, 0.28, 0.45 };
+		double upperNegativeLimits[] = { -0.227, -0.09, 0.3, 0.55 };
+		double lowerNeutralLimits[] = { 0.33, 0.46, 0.54, 0.65 };
+		double upperNeutralLimits[] = { 0.25, 0.38, 0.63, 0.75 };
+		double lowerPositiveLimits[] = { 0.55, 0.72, 1.019, 1.234 };
+		double upperPositiveLimits[] = { 0.45, 0.7, 1.119, 1.334 };
 
-		T1MF_Trapezoidal lowerNegativeClassificationMF = new T1MF_Trapezoidal("Lower negative classification", lowerNegativeLimits);
-		T1MF_Trapezoidal upperNegativeClassificationMF = new T1MF_Trapezoidal("Upper negative classification", upperNegativeLimits);
+		
+		T1MF_Trapezoidal lowerNegativeClassificationMF = new T1MF_Trapezoidal("Lower negative classification", lowerNegativeLimits, lowerLevels);
+		T1MF_Trapezoidal upperNegativeClassificationMF = new T1MF_Trapezoidal("Upper negative classification", upperNegativeLimits, upperLevels);
 		IntervalT2MF_Trapezoidal negativeClassificationT2MF = new IntervalT2MF_Trapezoidal("T2 negative classification", upperNegativeClassificationMF, lowerNegativeClassificationMF);
 		
-		T1MF_Trapezoidal lowerNeutralClassificationMF = new T1MF_Trapezoidal("Lower neutral classification", lowerNeutralLimits);
-		T1MF_Trapezoidal upperNeutralClassificationMF = new T1MF_Trapezoidal("Upper neutral classification", upperNeutralLimits);
+		T1MF_Trapezoidal lowerNeutralClassificationMF = new T1MF_Trapezoidal("Lower neutral classification", lowerNeutralLimits, lowerLevels);
+		T1MF_Trapezoidal upperNeutralClassificationMF = new T1MF_Trapezoidal("Upper neutral classification", upperNeutralLimits, upperLevels);
 		IntervalT2MF_Trapezoidal neutralClassificationT2MF = new IntervalT2MF_Trapezoidal("T2 neutral classification", upperNeutralClassificationMF, lowerNeutralClassificationMF);
 
-		T1MF_Trapezoidal lowerPositiveClassificationMF = new T1MF_Trapezoidal("Lower positive classification", lowerPositiveLimits);
-		T1MF_Trapezoidal upperPositiveClassificationMF = new T1MF_Trapezoidal("Upper positive classification", upperPositiveLimits);
+		T1MF_Trapezoidal lowerPositiveClassificationMF = new T1MF_Trapezoidal("Lower positive classification", lowerPositiveLimits, lowerLevels);
+		T1MF_Trapezoidal upperPositiveClassificationMF = new T1MF_Trapezoidal("Upper positive classification", upperPositiveLimits, upperLevels);
 		IntervalT2MF_Trapezoidal positiveClassificationT2MF = new IntervalT2MF_Trapezoidal("T2 positive classification", upperPositiveClassificationMF, lowerPositiveClassificationMF);
 
 		System.out.println("Membership functions setted...");
