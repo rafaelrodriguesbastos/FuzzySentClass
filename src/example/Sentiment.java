@@ -52,7 +52,7 @@ public class Sentiment {
 
 		// Set up the membership functions (MFs) for each input and output
 		// Negativity input
-//MF1='baixa':'itrapatype2',[-0.227 -0.09 0.28 0.45 -0.133 -0.00188 0.3 0.55 0.9]		
+		//MF1='baixa':'itrapatype2',[-0.227 -0.09 0.28 0.45 -0.133 -0.00188 0.3 0.55 0.9]		
 		double lowerLowNegLimits[] = { -0.133, -0.00188, 0.28, 0.45 };
 		double upperLowNegLimits[] = { -0.227, -0.09, 0.3, 0.55 };
 		double lowerModerateNegLimits[] = { 0.33, 0.46, 0.54, 0.65 };
@@ -165,13 +165,10 @@ public class Sentiment {
 		// level is 100 classification.setDiscretisationLevel(50);
 
 		
-//		String tweet = new String();
-//		String stemmedWord;
-//
 		System.out.println("Reading Tweet dataset...");
-		File dataset = new File("data" + File.separator + "final_clean.csv");
+		File dataset = new File("data" + File.separator + "final_7.csv");
 		String line = new String();
-		String[] data = new String[6];
+		String[] data = new String[5];
 		Scanner lineScan = new Scanner(dataset, "UTF-8");
 	    
 		
@@ -183,36 +180,36 @@ public class Sentiment {
 	    
 
 		StringBuffer outputFLS = new StringBuffer();
-		outputFLS.append("sequencial; classification; tweetID; positivity; negativity; puntual; Xinf; Xsup; lowerLowPositivityMF; upperLowPositivityMF; lowerModeratePositivityMF; upperModeratePositivityMF; lowerHighPositivityMF; upperHighPositivityMF; lowerLowNegativityMF; upperLowNegativityMF; lowerModerateNegativityMF; upperModerateNegativityMF; lowerHighNegativityMF; upperHighNegativityMF; lowerNegativeClassificationMF; upperNegativeClassificationMF; neutralClassificationMF; lowerPositiveClassificationMF; upperPositiveClassificationMF; linguisticClassification; accuracy").append("\n");
+		outputFLS.append("sequencial; classification; tweetID; positivity; negativity; punctual; Xinf; Xsup; lowerLowPositivityMF; upperLowPositivityMF; lowerModeratePositivityMF; upperModeratePositivityMF; lowerHighPositivityMF; upperHighPositivityMF; lowerLowNegativityMF; upperLowNegativityMF; lowerModerateNegativityMF; upperModerateNegativityMF; lowerHighNegativityMF; upperHighNegativityMF; lowerNegativeClassificationMF; upperNegativeClassificationMF; lowerNeutralClassificationMF; upperNeutralClassificationMF; lowerPositiveClassificationMF; upperPositiveClassificationMF; linguisticClassification; accuracy").append("\n");
 		outputFLSFile.write(outputFLS.toString().getBytes());
 		
 		int x = 0;
+		lineScan.nextLine();
 		while (lineScan.hasNextLine()) {
 			x++;
 			line = lineScan.nextLine();
 
 			// split the dataset line by comma
 			data = line.split(",");
-			Double point = getClassification(Double.valueOf(data[4]), Double.valueOf(data[5]));
+			Double point = getClassification(Double.valueOf(data[3]), Double.valueOf(data[4]));
 			
 			outputFLS = new StringBuffer();
-			
-			
+
 			//Get the lower and upper bound of MF for each input variable
 			//positivity
-			double lowerLowPositivity = lowPositivityT2MF.getLowerBound(Double.valueOf(data[4]));
-			double upperLowPositivity = lowPositivityT2MF.getUpperBound(Double.valueOf(data[4]));
-			double lowerModeratePositivity = moderatePositivityT2MF.getLowerBound(Double.valueOf(data[4]));
-			double upperModeratePositivity = moderatePositivityT2MF.getUpperBound(Double.valueOf(data[4]));
-			double lowerHighPositivity = highPositivityT2MF.getLowerBound(Double.valueOf(data[4]));
-			double upperHighPositivity = highPositivityT2MF.getUpperBound(Double.valueOf(data[4]));
+			double lowerLowPositivity = lowPositivityT2MF.getLowerBound(Double.valueOf(data[3]));
+			double upperLowPositivity = lowPositivityT2MF.getUpperBound(Double.valueOf(data[3]));
+			double lowerModeratePositivity = moderatePositivityT2MF.getLowerBound(Double.valueOf(data[3]));
+			double upperModeratePositivity = moderatePositivityT2MF.getUpperBound(Double.valueOf(data[3]));
+			double lowerHighPositivity = highPositivityT2MF.getLowerBound(Double.valueOf(data[3]));
+			double upperHighPositivity = highPositivityT2MF.getUpperBound(Double.valueOf(data[3]));
 			//negativity
-			double lowerLowNegativity = lowNegativityT2MF.getLowerBound(Double.valueOf(data[5]));
-			double upperLowNegativity = lowNegativityT2MF.getUpperBound(Double.valueOf(data[5]));
-			double lowerModerateNegativity = moderateNegativityT2MF.getLowerBound(Double.valueOf(data[5]));
-			double upperModerateNegativity = moderateNegativityT2MF.getUpperBound(Double.valueOf(data[5]));
-			double lowerHighNegativity = highNegativityT2MF.getLowerBound(Double.valueOf(data[5]));
-			double upperHighNegativity = highNegativityT2MF.getUpperBound(Double.valueOf(data[5]));
+			double lowerLowNegativity = lowNegativityT2MF.getLowerBound(Double.valueOf(data[4]));
+			double upperLowNegativity = lowNegativityT2MF.getUpperBound(Double.valueOf(data[4]));
+			double lowerModerateNegativity = moderateNegativityT2MF.getLowerBound(Double.valueOf(data[4]));
+			double upperModerateNegativity = moderateNegativityT2MF.getUpperBound(Double.valueOf(data[4]));
+			double lowerHighNegativity = highNegativityT2MF.getLowerBound(Double.valueOf(data[4]));
+			double upperHighNegativity = highNegativityT2MF.getUpperBound(Double.valueOf(data[4]));
 			
 			//Get the lower and upper bound of MF for punctual output
 			double lowerNegativeClassification = negativeClassificationT2MF.getLowerBound(point);
@@ -239,7 +236,7 @@ public class Sentiment {
 				linguisticClassification = "neutral";
 			}
 			
-			if (linguisticClassification.equals(data[3].toString())) {
+			if (linguisticClassification.equals(data[2].toString())) {
 				accuracy = 1;
 				accuracyCount++;
 			}
@@ -250,10 +247,10 @@ public class Sentiment {
 			//Write the FLS output of sentiment analysis 
 			outputFLS
 			.append(x).append("; ")
-			.append(data[3]).append("; ")
-			.append(data[1]).append("; ")
-			.append(Double.valueOf(data[4])).append("; ")
-			.append(Double.valueOf(data[5])).append("; ").append(point).append("; ")
+			.append(data[2]).append("; ")
+			.append(data[0]).append("; ")
+			.append(Double.valueOf(data[3])).append("; ")
+			.append(Double.valueOf(data[4])).append("; ").append(point).append("; ")
 			.append(this.OutputXValue).append("; ").append(this.OutputYValue).append("; ")
 			.append(lowerLowPositivity).append("; ")
 			.append(upperLowPositivity).append("; ")
@@ -275,7 +272,8 @@ public class Sentiment {
 			.append(upperPositiveClassification).append("; ")
 			.append(linguisticClassification).append("; ")
 			.append(accuracy).append("\n");
-					
+
+			
 			outputFLSFile.write(outputFLS.toString().getBytes());
 
 		}
@@ -284,7 +282,9 @@ public class Sentiment {
 
 		System.out.println("Output file generated!");
 		
-		System.out.println(accuracyCount + " accuracy!");
+		double percent = ((double) accuracyCount / (double) x)*100.0;
+		
+		System.out.println(percent + "% accuracy!");
 		
 		
 		// plot some sets, discretizing each input into 100 steps.
@@ -328,7 +328,7 @@ public class Sentiment {
 
 		//this.OutputXValue = rulebase.evaluateGetCentroid(0)
 
-		TreeMap<Output, Object[]> centroid = rulebase.evaluateGetCentroid(1);
+		TreeMap<Output, Object[]> centroid = rulebase.evaluateGetCentroid(1); //0 Center of sets, 1 Centroid
     	Object[] centroidTip = centroid.get(classification);
         Tuple centroidTipXValues = (Tuple)centroidTip[0];
 				
