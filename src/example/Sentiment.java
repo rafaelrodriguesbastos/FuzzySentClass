@@ -3,7 +3,7 @@
  *
  * Created on Oct 07th 2022
  *
- * Based on Juzzy by Christian Wagner
+ * Rafael Bastos
  */
 package example;
 
@@ -50,15 +50,13 @@ public class Sentiment {
 		positivity = new Input("Positivy degree", new Tuple(0, 1));
 		classification = new Output("Tweet classification", new Tuple(0, 1));
 
-		// Set up the membership functions (MFs) for each input and output
-		// Negativity input
-		//MF1='baixa':'itrapatype2',[-0.227 -0.09 0.28 0.45 -0.133 -0.00188 0.3 0.55 0.9]		
 		double lowerLowNegLimits[] = { -0.133, -0.00188, 0.28, 0.45 };
 		double upperLowNegLimits[] = { -0.227, -0.09, 0.3, 0.55 };
 		double lowerModerateNegLimits[] = { 0.33, 0.46, 0.54, 0.65 };
 		double upperModerateNegLimits[] = { 0.25, 0.38, 0.63, 0.75 };
 		double lowerHighNegLimits[] = { 0.55, 0.72, 1.019, 1.234 };
 		double upperHighNegLimits[] = { 0.45, 0.7, 1.119, 1.334 };
+		
 		
 		double lowerLevels[] = {0.9, 0.9};
 		double upperLevels[] = {1.0, 1.0};
@@ -98,13 +96,6 @@ public class Sentiment {
 
 		
 		// Classification output
-//		double lowerNegativeLimits[] = { 0.0, 0.0, 0.3, 0.4333333333333333 };
-//		double upperNegativeLimits[] = { 0.0, 0.0, 0.3, 0.5 };
-//		double lowerNeutralLimits[] = { 0.3666666666666666, 0.45, 0.55, 0.6333333333333333 };
-//		double upperNeutralLimits[] = { 0.3, 0.45, 0.55, 0.7 };
-//		double lowerPositiveLimits[] = { 0.5666666666666666, 0.7, 1.0, 1.0 };
-//		double upperPositiveLimits[] = { 0.5, 0.7, 1.0, 1.0 };
-		
 		double lowerNegativeLimits[] = { -0.133, -0.00188, 0.28, 0.45 };
 		double upperNegativeLimits[] = { -0.227, -0.09, 0.3, 0.55 };
 		double lowerNeutralLimits[] = { 0.33, 0.46, 0.54, 0.65 };
@@ -161,10 +152,7 @@ public class Sentiment {
 
 		System.out.println("Rulebases setted...");
 		
-		// just an example of setting the discretisation level of an output - the usual
-		// level is 100 classification.setDiscretisationLevel(50);
-
-		
+	
 		System.out.println("Reading Tweet dataset...");
 		File dataset = new File("data" + File.separator + "final_7.csv");
 		String line = new String();
@@ -321,12 +309,6 @@ public class Sentiment {
 		negativity.setInput(negativityMeasure);
 		positivity.setInput(positivityMeasure);
 		// now execute the FLS and print output
-//		System.out.println("The negativity measure was: " + negativity.getInput());
-//		System.out.println("The positivity measure was: " + positivity.getInput());
-//		System.out.println("Using height defuzzification " + rulebase.evaluate(0).get(classification));
-//		System.out.println("Using centroid defuzzification " + rulebase.evaluate(1).get(classification));
-
-		//this.OutputXValue = rulebase.evaluateGetCentroid(0)
 
 		TreeMap<Output, Object[]> centroid = rulebase.evaluateGetCentroid(1); //0 Center of sets, 1 Centroid
     	Object[] centroidTip = centroid.get(classification);

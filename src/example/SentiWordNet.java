@@ -122,16 +122,6 @@ public class SentiWordNet {
 			Double[] zeros = {0.0, 0.0};
 			return zeros;
 		}
-//		double total = 0.0;
-//	    if(dictionary.get(word+"#n") != null)
-//	         total = dictionary.get(word+"#n") + total;
-//	    if(dictionary.get(word+"#a") != null)
-//	        total = dictionary.get(word+"#a") + total;
-//	    if(dictionary.get(word+"#r") != null)
-//	        total = dictionary.get(word+"#r") + total;
-//	    if(dictionary.get(word+"#v") != null)
-//	        total = dictionary.get(word+"#v") + total;
-//	    return total;		
 	}
 
 }
